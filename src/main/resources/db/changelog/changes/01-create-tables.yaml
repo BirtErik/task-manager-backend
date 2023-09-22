@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ErikBirt
+      preConditions:
+        - onFail: CONTINUE
+        - tableExists:
+            tableName: users
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: serial(9)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: username
+                  type: varchar(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(35)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(70)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: users
+            constraintName: users_pk
+            columnNames: id
+
+  - changeSet:
+      id: 2
+      author: ErikBirt
+      preConditions:
+        - onFail: CONTINUE
+        - tableExists:
+            tableName: tasks
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: serial(9)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: integer(9)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: priority
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: tasks
+            constraintName: tasks_pk
+            columnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: tasks
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: tasks_fk0
+
+  - changeSet:
+      id: 3
+      author: ErikBirt
+      preConditions:
+        - onFail: CONTINUE
+        - tableExists:
+            tableName: authorities
+      changes:
+        - createTable:
+            tableName: authorities
+            columns:
+              - column:
+                  name: id
+                  type: serial(9)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: integer(9)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: authorities
+            constraintName: authorities_pk
+            columnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: authorities
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: authorities_fk0
