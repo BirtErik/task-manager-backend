@@ -2,10 +2,6 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: ErikBirt
-      preConditions:
-        - onFail: CONTINUE
-        - tableExists:
-            tableName: users
       changes:
         - createTable:
             tableName: users
@@ -38,10 +34,6 @@ databaseChangeLog:
   - changeSet:
       id: 2
       author: ErikBirt
-      preConditions:
-        - onFail: CONTINUE
-        - tableExists:
-            tableName: tasks
       changes:
         - createTable:
             tableName: tasks
@@ -90,10 +82,6 @@ databaseChangeLog:
   - changeSet:
       id: 3
       author: ErikBirt
-      preConditions:
-        - onFail: CONTINUE
-        - tableExists:
-            tableName: authorities
       changes:
         - createTable:
             tableName: authorities
