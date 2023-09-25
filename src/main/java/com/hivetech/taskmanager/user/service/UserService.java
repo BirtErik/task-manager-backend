@@ -5,7 +5,7 @@ import com.hivetech.taskmanager.user.model.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService {
-    User loadByEmail(String email) throws UsernameNotFoundException;
+    User findByEmail(String email) throws UsernameNotFoundException;
 
     UserResponseDTO findById(long id);
 
