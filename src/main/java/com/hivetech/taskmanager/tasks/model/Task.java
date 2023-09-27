@@ -1,7 +1,6 @@
 package com.hivetech.taskmanager.tasks.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.hivetech.taskmanager.tasks.dto.TaskRequestDTO;
 import com.hivetech.taskmanager.tasks.enums.Priority;
 import com.hivetech.taskmanager.tasks.enums.Status;
 import com.hivetech.taskmanager.user.model.User;
@@ -45,13 +44,4 @@ public class Task {
         this.status = status;
     }
 
-    public static Task fromRequestDTO(TaskRequestDTO requestDTO, User user) {
-        Task task = new Task();
-        task.setUserId(user);
-        task.setName(requestDTO.getName());
-        task.setDescription(requestDTO.getDescription());
-        task.setPriority(requestDTO.getPriority());
-        task.setStatus(requestDTO.getStatus());
-        return task;
-    }
 }

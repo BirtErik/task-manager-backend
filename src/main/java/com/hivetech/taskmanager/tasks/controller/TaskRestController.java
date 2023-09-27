@@ -21,13 +21,13 @@ public class TaskRestController {
     }
 
     @GetMapping()
-    public List<Task> findAll() {
-        return taskService.findAll();
+    public ResponseEntity<List<Task>> findAll() {
+        return new ResponseEntity<>(taskService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{taskId}")
-    public Task findById(@PathVariable int taskId) {
-        return taskService.findById(taskId);
+    public ResponseEntity<Task> findById(@PathVariable int taskId) {
+        return new ResponseEntity<>(taskService.findById(taskId), HttpStatus.OK);
     }
 
     @PostMapping("/create")
@@ -38,8 +38,7 @@ public class TaskRestController {
     @DeleteMapping("/{taskId}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) {
         taskService.delete(taskId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        //TODO: ADD CONTROLLER EXCEPTION HANDLING
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 }

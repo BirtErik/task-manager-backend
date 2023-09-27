@@ -5,23 +5,26 @@ import com.hivetech.taskmanager.user.dto.UserResponseDTO;
 import com.hivetech.taskmanager.user.model.User;
 import com.hivetech.taskmanager.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new CustomException("Email not found", HttpStatus.NOT_FOUND));
+        this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -30,12 +33,20 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() ->
                         new CustomException("User with id " + id + " not found", HttpStatus.NOT_FOUND));
 
-        return UserResponseDTO.fromEntity(user);
+        return modelMapper.map(user, UserResponseDTO.class);
     }
 
     @Override
     @Transactional
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws CustomException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException("Email is not valid", HttpStatus.CONFLICT));
+
+        return user;
     }
 }
