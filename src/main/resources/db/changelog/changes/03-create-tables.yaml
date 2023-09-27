@@ -2,6 +2,42 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: ErikBirt
+      preConditions:
+        - not:
+            tableExists:
+              tableName: roles
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: serial(9)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: role
+                  type: varchar(50)
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: role
+                  value: "ROLE_ADMIN"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: role
+                  value: "ROLE_USER"
+
+  - changeSet:
+      id: 2
+      author: ErikBirt
+      preConditions:
+        - not:
+            tableExists:
+              tableName: users
       changes:
         - createTable:
             tableName: users
@@ -16,24 +52,26 @@ databaseChangeLog:
                   type: varchar(25)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: email
                   type: varchar(35)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: password
                   type: varchar(70)
                   constraints:
                     nullable: false
-        - addUniqueConstraint:
-            tableName: users
-            constraintName: users_pk
-            columnNames: id
 
   - changeSet:
-      id: 2
+      id: 3
       author: ErikBirt
+      preConditions:
+        - not:
+            tableExists:
+              tableName: tasks
       changes:
         - createTable:
             tableName: tasks
@@ -57,21 +95,17 @@ databaseChangeLog:
                   name: description
                   type: varchar(500)
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: priority
                   type: varchar(20)
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: status
                   type: varchar(20)
                   constraints:
                     nullable: false
-        - addUniqueConstraint:
-            tableName: tasks
-            constraintName: tasks_pk
-            columnNames: id
         - addForeignKeyConstraint:
             baseTableName: tasks
             baseColumnNames: user_id
@@ -80,11 +114,15 @@ databaseChangeLog:
             constraintName: tasks_fk0
 
   - changeSet:
-      id: 3
+      id: 4
       author: ErikBirt
+      preConditions:
+        - not:
+            tableExists:
+              tableName: user_role
       changes:
         - createTable:
-            tableName: authorities
+            tableName: user_role
             columns:
               - column:
                   name: id
@@ -93,21 +131,23 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: user_id
-                  type: integer(9)
+                  type: int(9)
                   constraints:
                     nullable: false
               - column:
-                  name: role
-                  type: varchar(40)
+                  name: role_id
+                  type: int(9)
                   constraints:
                     nullable: false
-        - addUniqueConstraint:
-            tableName: authorities
-            constraintName: authorities_pk
-            columnNames: id
         - addForeignKeyConstraint:
-            baseTableName: authorities
+            baseTableName: user_role
             baseColumnNames: user_id
             referencedTableName: users
             referencedColumnNames: id
-            constraintName: authorities_fk0
+            constraintName: user_role_fk0
+        - addForeignKeyConstraint:
+            baseTableName: user_role
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: user_role_fk1
