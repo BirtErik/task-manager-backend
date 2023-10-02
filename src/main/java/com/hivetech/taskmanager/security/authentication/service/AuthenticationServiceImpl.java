@@ -51,7 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public UserResponseDTO registerUser(UserRegisterDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new CustomException("User with email: " + userDTO.getEmail() + "already exists", HttpStatus.CONFLICT);
+            throw new CustomException("User with email: " + userDTO.getEmail() + " already exists", HttpStatus.CONFLICT);
         }
 
         String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
@@ -85,6 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 userRepository.findByEmail(loginDTO.getEmail()),
                 UserResponseDTO.class), token
         );
+
     }
 
 }
