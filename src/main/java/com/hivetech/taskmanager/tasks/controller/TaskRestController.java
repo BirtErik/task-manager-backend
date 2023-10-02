@@ -20,14 +20,9 @@ public class TaskRestController {
         this.taskService = taskService;
     }
 
-    @GetMapping()
-    public ResponseEntity<List<Task>> findAll() {
-        return new ResponseEntity<>(taskService.findAll(), HttpStatus.OK);
-    }
-
-    @GetMapping("/{taskId}")
-    public ResponseEntity<Task> findById(@PathVariable int taskId) {
-        return new ResponseEntity<>(taskService.findById(taskId), HttpStatus.OK);
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Task>> getAllByUserId(@PathVariable Long userId) {
+        return new ResponseEntity<>(taskService.getAllByUserId(userId), HttpStatus.OK);
     }
 
     @PostMapping("/create")

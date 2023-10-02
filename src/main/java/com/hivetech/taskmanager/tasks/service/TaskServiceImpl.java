@@ -30,30 +30,32 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findAll() {
-        return taskRepository.findAll();
-    }
-
-    @Override
-    public Task findById(long id) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Task with id" + id + "not found", HttpStatus.NOT_FOUND));
-
-        return task;
-    }
-
-    @Override
     @Transactional
     public Task save(TaskRequestDTO taskDTO) {
         User user = userRepository.findById(taskDTO.getUserId())
                 .orElseThrow(() -> new CustomException("User not found while saving the task", HttpStatus.NOT_FOUND));
+        Task task = new Task(user,
+                taskDTO.getName(),
+                taskDTO.getDescription(),
+                taskDTO.getPriority(),
+                taskDTO.getStatus()
+        );
 
-        return taskRepository.save(modelMapper.map(taskDTO, Task.class));
+        if (taskDTO.getId() != null) {
+            task.setId(taskDTO.getId());
+        }
+
+        return taskRepository.save(task);
     }
 
     @Override
     @Transactional
     public void delete(long id) {
         taskRepository.delete(taskRepository.findById(id).get());
+    }
+
+    @Override
+    public List<Task> getAllByUserId(Long id) {
+        return taskRepository.findByUserId_Id(id);
     }
 }

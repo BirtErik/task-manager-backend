@@ -37,7 +37,17 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
-    public Task(String name, String description, Priority priority, Status status) {
+    public Task(User userId, Long id, String name, String description, Priority priority, Status status) {
+        this.userId = userId;
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.priority = priority;
+        this.status = status;
+    }
+
+    public Task(User userId, String name, String description, Priority priority, Status status) {
+        this.userId = userId;
         this.name = name;
         this.description = description;
         this.priority = priority;
